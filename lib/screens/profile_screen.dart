@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../services/auth_service.dart';
+import '../models/app_user.dart';
 import '../widgets/account_required_view.dart';
 import 'settings_screen.dart';
+import 'admin/admin_dashboard.dart';
+import 'cook/cook_dashboard.dart';
+import 'cashier/cashier_dashboard.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -16,15 +20,15 @@ class ProfileScreen extends StatelessWidget {
         centerTitle: true,
         title: Text('Mon profil', style: AppTheme.appBarTitle),
       ),
-      body: ValueListenableBuilder<bool>(
-        valueListenable: AuthService.instance.isLoggedIn,
-        builder: (context, loggedIn, _) {
-          if (!loggedIn) {
+      body: ValueListenableBuilder<AppUser?>(
+        valueListenable: AuthService.instance.currentUserData,
+        builder: (context, user, _) {
+          if (user == null) {
             return const AccountRequiredView(
               message: 'Connectez-vous ou créez un compte pour accéder à votre profil',
             );
           }
-          // TODO: remplacer par les vraies informations récupérées via GET /api/me.
+
           return SafeArea(
             child: ListView(
               padding: const EdgeInsets.all(20),
@@ -43,15 +47,56 @@ class ProfileScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Client Belle Envie', style: Theme.of(context).textTheme.titleMedium),
+                          Text(user.name, style: Theme.of(context).textTheme.titleMedium),
                           const SizedBox(height: 3),
-                          Text('client@example.com', style: Theme.of(context).textTheme.bodyMedium),
+                          Text(user.email, style: Theme.of(context).textTheme.bodyMedium),
+                          if (user.role != UserRole.client)
+                            Container(
+                              margin: const EdgeInsets.only(top: 4),
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: AppColors.gold.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                user.role.name.toUpperCase(),
+                                style: const TextStyle(color: AppColors.gold, fontSize: 10, fontWeight: FontWeight.bold),
+                              ),
+                            ),
                         ],
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 28),
+                
+                // Section réservée au personnel
+                if (user.role != UserRole.client) ...[
+                  _ProfileTile(
+                    icon: Icons.dashboard_outlined,
+                    title: 'Tableau de bord ${user.role.name}',
+                    subtitle: 'Accéder aux outils de gestion',
+                    onTap: () {
+                      Widget dashboard;
+                      switch (user.role) {
+                        case UserRole.admin:
+                          dashboard = const AdminDashboard();
+                          break;
+                        case UserRole.cook:
+                          dashboard = const CookDashboard();
+                          break;
+                        case UserRole.cashier:
+                          dashboard = const CashierDashboard();
+                          break;
+                        default:
+                          return;
+                      }
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => dashboard));
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                ],
+
                 _ProfileTile(
                   icon: Icons.settings_outlined,
                   title: 'Paramètres',

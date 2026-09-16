@@ -1,25 +1,35 @@
-# Intégration Firebase terminée
+# Walkthrough : Dashboards Multi-Rôles et Gestion Admin
 
-L'application **Belle Envie** est désormais connectée à Firebase pour l'authentification et le stockage des données.
+J'ai implémenté les bases des interfaces dédiées pour chaque métier du restaurant, ainsi que la logique de gestion des rôles.
 
-## Changements effectués
+## Ce qui a été fait
 
-### Core & Configuration
-- **[pubspec.yaml](file:///C:/Users/MELI/StudioProjects/belle_envie/pubspec.yaml)** : Ajout des packages `firebase_core`, `firebase_auth`, et `cloud_firestore`.
-- **[main.dart](file:///C:/Users/MELI/StudioProjects/belle_envie/lib/main.dart)** : Initialisation asynchrone de Firebase au lancement.
+### 1. Gestion des Utilisateurs et Rôles
+- **Modèle `AppUser`** : Chaque utilisateur a désormais un rôle (`admin`, `cook`, `cashier`, `client`).
+- **`AuthService`** : Lors de la connexion, l'application récupère automatiquement les données de l'utilisateur depuis la collection Firestore `users`.
+- **`ProfileScreen`** : Affiche un badge indiquant le rôle et propose un bouton "Tableau de bord" uniquement pour le personnel.
 
-### Services & Modèles
-- **[AuthService](file:///C:/Users/MELI/StudioProjects/belle_envie/lib/services/auth_service.dart)** : Passage à `FirebaseAuth`. L'état de connexion est désormais synchronisé automatiquement.
-- **[FirestoreService](file:///C:/Users/MELI/StudioProjects/belle_envie/lib/services/firestore_service.dart)** : **[NOUVEAU]** Service dédié pour récupérer le menu en temps réel depuis Firestore.
-- **[Dish](file:///C:/Users/MELI/StudioProjects/belle_envie/lib/models/dish.dart)** : Ajout de méthodes de conversion Firestore (`fromFirestore` / `toFirestore`).
+### 2. Dashboard Admin (Gestionnaire)
+- **Interface** : Un hub central pour superviser les employés, les stocks et les réservations.
+- **Gestion des Employés** : L'Admin peut changer le rôle de n'importe quel utilisateur (ex: transformer un client en cuisinier).
+- **Gestion des Stocks** : Liste des ingrédients avec alertes visuelles (icône rouge) quand le stock est bas. Possibilité de mettre à jour les quantités.
+- **Réservations** : Vue globale de toutes les réservations avec possibilité de confirmer ou annuler.
 
-### Interface Utilisateur (UI)
-- **[HomeScreen](file:///C:/Users/MELI/StudioProjects/belle_envie/lib/screens/home_screen.dart)** : Utilise maintenant un `StreamBuilder` pour afficher les plats directement depuis le cloud.
-- **[SignupScreen](file:///C:/Users/MELI/StudioProjects/belle_envie/lib/screens/signup_screen.dart)** & **[LoginScreen](file:///C:/Users/MELI/StudioProjects/belle_envie/lib/screens/login_screen.dart)** : Branchés sur les fonctions réelles de création de compte et de connexion.
+### 3. Dashboards Cuisinier et Caissier
+- **Cuisinier** : Interface simplifiée pour gérer le menu et les commandes.
+- **Caissier** : Interface optimisée pour la caisse et le suivi des réservations quotidiennes.
 
-> [!IMPORTANT]
-> **Rappel Final** : N'oubliez pas d'ajouter votre fichier `google-services.json` dans le dossier `android/app/` pour que la connexion soit effective sur un appareil Android.
+### 4. Réservations Clients
+- La page **Réserver une table** est maintenant fonctionnelle : elle enregistre la demande directement dans Firestore, ce qui permet à l'Admin de la voir instantanément.
 
-## Prochaines étapes
-1.  **Peuplement de la base** : Vous pouvez maintenant ajouter vos plats dans une collection nommée `dishes` dans la console Firestore.
-2.  **Images** : Pensez à utiliser des URLs d'images (Firebase Storage par exemple) pour le champ `imagePath` de vos documents Firestore.
+---
+
+## Instructions pour tester
+
+1.  **Créer un compte** : Inscrivez-vous normalement dans l'application.
+2.  **Passer Admin** : Allez dans la console Firebase, collection `users`, cherchez votre document et changez le champ `role` de `client` à `admin`.
+3.  **Voir le changement** : Revenez sur l'écran **Profil** de l'application. Vous verrez apparaître le bouton "Tableau de bord admin".
+4.  **Gérer le personnel** : Depuis le dashboard, vous pourrez alors promouvoir d'autres comptes au rang de Cuisinier ou Caissier.
+
+> [!TIP]
+> Pour le stock, assurez-vous de créer une collection `inventory` dans Firestore avec des documents contenant `name`, `quantity` (number), `unit` (string) et `minThreshold` (number).

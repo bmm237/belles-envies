@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../services/auth_service.dart';
+import '../services/firestore_service.dart';
+import '../models/reservation.dart';
 import '../widgets/account_required_view.dart';
 
 class ReservationScreen extends StatefulWidget {
@@ -37,17 +39,49 @@ class _ReservationScreenState extends State<ReservationScreen> {
     if (result != null) setState(() => _time = result);
   }
 
-  void _submit() {
+  void _submit() async {
     if (_date == null || _time == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Choisis une date et une heure')),
       );
       return;
     }
-    // TODO: brancher sur POST /api/reservations une fois l'API prête.
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Demande de réservation envoyée — en attente de confirmation')),
+
+    final user = AuthService.instance.currentUser;
+    final userData = AuthService.instance.currentUserData.value;
+    
+    if (user == null || userData == null) return;
+
+    final reservationDateTime = DateTime(
+      _date!.year,
+      _date!.month,
+      _date!.day,
+      _time!.hour,
+      _time!.minute,
     );
+
+    final reservation = Reservation(
+      id: '', // Firestore générera l'ID
+      userId: user.uid,
+      userName: userData.name,
+      dateTime: reservationDateTime,
+      guests: _guests,
+      notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
+      status: ReservationStatus.pending,
+    );
+
+    try {
+      await FirestoreService.instance.createReservation(reservation);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Demande de réservation envoyée — en attente de confirmation')),
+      );
+      Navigator.of(context).pop();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erreur : $e')),
+      );
+    }
   }
 
   @override

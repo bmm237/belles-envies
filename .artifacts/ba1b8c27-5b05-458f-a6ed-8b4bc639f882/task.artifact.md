@@ -1,10 +1,11 @@
-# Tâches d'intégration Firebase
+# Tâches : Dashboards Multi-Rôles (Admin, Cuisinier, Caissier)
 
-- `[x]` Configuration des dépendances (`pubspec.yaml`)
-- `[x]` Initialisation de Firebase dans `main.dart`
-- `[x]` Mise à jour du modèle `Dish` (mapping Firestore)
-- `[x]` Implémentation du `AuthService` avec Firebase Auth
-- `[x]` Création du `FirestoreService` pour le menu
-- `[x]` Mise à jour de `HomeScreen` pour utiliser Firestore
-- `[x]` Mise à jour de `SignupScreen` et `LoginScreen`
-- `[x]` Vérification et tests de base
+- `[x]` Création des modèles de données (`AppUser`, `InventoryItem`, `Reservation`)
+- `[x]` Mise à jour de `AuthService` pour la gestion des rôles
+- `[x]` Mise à jour de `FirestoreService` (CRUD Stocks et Réservations)
+- `[x]` Création du Dashboard Admin (`admin_dashboard.dart`)
+- `[x]` Création du Dashboard Cuisinier (`cook_dashboard.dart`)
+- `[x]` Création du Dashboard Caissier (`cashier_dashboard.dart`)
+- `[x]` Écrans de gestion Admin (Employés, Stocks)
+- `[x]` Intégration de la navigation dans `ProfileScreen`
+- `[x]` Vérification des accès par rôle
