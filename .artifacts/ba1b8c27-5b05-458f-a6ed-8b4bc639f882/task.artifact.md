@@ -1,11 +1,8 @@
-# Tâches : Dashboards Multi-Rôles (Admin, Cuisinier, Caissier)
+# Tâches : Refonte Authentification et Mode Visiteur
 
-- `[x]` Création des modèles de données (`AppUser`, `InventoryItem`, `Reservation`)
-- `[x]` Mise à jour de `AuthService` pour la gestion des rôles
-- `[x]` Mise à jour de `FirestoreService` (CRUD Stocks et Réservations)
-- `[x]` Création du Dashboard Admin (`admin_dashboard.dart`)
-- `[x]` Création du Dashboard Cuisinier (`cook_dashboard.dart`)
-- `[x]` Création du Dashboard Caissier (`cashier_dashboard.dart`)
-- `[x]` Écrans de gestion Admin (Employés, Stocks)
-- `[x]` Intégration de la navigation dans `ProfileScreen`
-- `[x]` Vérification des accès par rôle
+- `[x]` Nettoyage et Refonte de `AuthService` (Suppression admin forcé)
+- `[x]` Création du `WelcomeScreen`
+- `[x]` Mise à jour de `AuthWrapper` (Logique de routage globale)
+- `[x]` Modification de `LoginScreen` et `SignupScreen`
+- `[x]` Amélioration de l'UX Visiteur dans les écrans bloqués
+- `[x]` Vérification finale de l'expérience utilisateur

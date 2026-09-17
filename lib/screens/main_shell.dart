@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
+import '../services/auth_service.dart';
 import 'home_screen.dart';
 import 'reservation_screen.dart';
 import 'orders_screen.dart';
@@ -31,7 +32,27 @@ class _MainShellState extends State<MainShell> {
     ];
 
     return Scaffold(
-      body: IndexedStack(index: _currentIndex, children: screens),
+      body: Stack(
+        children: [
+          IndexedStack(index: _currentIndex, children: screens),
+          // Indicateur de rôle temporaire pour le debug
+          Positioned(
+            bottom: 80,
+            left: 20,
+            child: ValueListenableBuilder(
+              valueListenable: AuthService.instance.currentUserData,
+              builder: (context, user, _) {
+                if (user == null) return const SizedBox.shrink();
+                return Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(color: Colors.red.withValues(alpha: 0.8), borderRadius: BorderRadius.circular(4)),
+                  child: Text('DEBUG: Connecté en tant que ${user.role.name}', style: const TextStyle(color: Colors.white, fontSize: 10)),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _goToTab,

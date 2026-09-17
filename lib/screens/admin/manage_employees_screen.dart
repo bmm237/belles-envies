@@ -12,6 +12,10 @@ class ManageEmployeesScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.black,
         title: const Text('Gérer les employés', style: TextStyle(color: AppColors.gold)),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.gold),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: StreamBuilder<List<AppUser>>(
         stream: FirestoreService.instance.getEmployees(),

@@ -41,10 +41,8 @@ class _SignupScreenState extends State<SignupScreen> {
     try {
       await AuthService.instance.signup(email, password, name);
       if (!mounted) return;
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const MainShell(initialIndex: 3)),
-        (route) => false,
-      );
+      // Retour à la racine pour laisser le Wrapper décider du Dashboard
+      Navigator.of(context).popUntil((route) => route.isFirst);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Compte créé, bienvenue !')),
       );

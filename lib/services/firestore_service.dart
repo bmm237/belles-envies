@@ -65,4 +65,25 @@ class FirestoreService {
   Future<void> updateUserRole(String uid, UserRole role) {
     return _db.collection('users').doc(uid).update({'role': role.name});
   }
+
+  /// Initialise des données de test pour le dashboard
+  Future<void> seedData() async {
+    // 1. Ajouter des articles d'inventaire
+    final inventory = [
+      {'name': 'Riz Long Grain', 'quantity': 50.0, 'unit': 'kg', 'minThreshold': 10.0},
+      {'name': 'Huile de Palme', 'quantity': 5.0, 'unit': 'L', 'minThreshold': 10.0},
+      {'name': 'Arachides pilées', 'quantity': 2.0, 'unit': 'kg', 'minThreshold': 5.0},
+      {'name': 'Sel', 'quantity': 20.0, 'unit': 'sachets', 'minThreshold': 5.0},
+    ];
+
+    for (var item in inventory) {
+      await _db.collection('inventory').add(item);
+    }
+
+    // 2. Créer quelques catégories si elles n'existent pas
+    final cats = ['Plats traditionnels', 'Grillades', 'Boissons', 'Desserts'];
+    for (var cat in cats) {
+      await _db.collection('categories').doc(cat).set({});
+    }
+  }
 }

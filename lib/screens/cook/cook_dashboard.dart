@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../services/auth_service.dart';
 import '../../theme/app_theme.dart';
 import '../../services/firestore_service.dart';
 import 'manage_menu_screen.dart';
@@ -13,6 +14,12 @@ class CookDashboard extends StatelessWidget {
         backgroundColor: AppColors.black,
         title: const Text('Cuisine', style: TextStyle(color: AppColors.gold)),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout, color: AppColors.gold),
+            onPressed: () => AuthService.instance.logout(),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),

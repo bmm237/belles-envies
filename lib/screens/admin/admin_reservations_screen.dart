@@ -13,6 +13,10 @@ class AdminReservationsScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.black,
         title: const Text('Toutes les réservations', style: TextStyle(color: AppColors.gold)),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.gold),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: StreamBuilder<List<Reservation>>(
         stream: FirestoreService.instance.getReservations(),

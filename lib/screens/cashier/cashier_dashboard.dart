@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../services/auth_service.dart';
 import '../../theme/app_theme.dart';
 
 class CashierDashboard extends StatelessWidget {
@@ -11,6 +12,12 @@ class CashierDashboard extends StatelessWidget {
         backgroundColor: AppColors.black,
         title: const Text('Caisse', style: TextStyle(color: AppColors.gold)),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout, color: AppColors.gold),
+            onPressed: () => AuthService.instance.logout(),
+          ),
+        ],
       ),
       body: ListView(
         padding: const EdgeInsets.all(20),

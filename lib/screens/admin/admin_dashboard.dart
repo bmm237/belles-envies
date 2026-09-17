@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../services/auth_service.dart';
 import '../../theme/app_theme.dart';
 import '../../services/firestore_service.dart';
-import '../../models/inventory_item.dart';
-import '../../models/reservation.dart';
 import 'manage_employees_screen.dart';
 import 'manage_inventory_screen.dart';
 import 'admin_reservations_screen.dart';
@@ -12,18 +11,68 @@ class AdminDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final admin = AuthService.instance.currentUserData.value;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.black,
         title: const Text('Dashboard Admin', style: TextStyle(color: AppColors.gold)),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout, color: AppColors.gold),
+            onPressed: () => AuthService.instance.logout(),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Aperçu du restaurant', style: Theme.of(context).textTheme.headlineSmall),
+            // En-tête avec les infos admin intégrées
+            Container(
+              padding: const EdgeInsets.all(16),
+              margin: const EdgeInsets.only(bottom: 25),
+              decoration: BoxDecoration(
+                color: AppColors.black,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                children: [
+                  const CircleAvatar(
+                    backgroundColor: AppColors.gold,
+                    child: Icon(Icons.person, color: AppColors.black),
+                  ),
+                  const SizedBox(width: 15),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(admin?.name ?? 'administrateur', 
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                      Text(admin?.email ?? 'okadministrateuradmin@gmail.com', 
+                          style: const TextStyle(color: Colors.white70, fontSize: 12)),
+                      Text(admin?.phone ?? '688109782', 
+                          style: const TextStyle(color: AppColors.gold, fontSize: 12)),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Aperçu du restaurant', style: Theme.of(context).textTheme.headlineSmall),
+                IconButton(
+                  icon: const Icon(Icons.refresh, color: AppColors.gold),
+                  onPressed: () async {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Initialisation des données en cours...')));
+                    await FirestoreService.instance.seedData();
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Données initialisées !')));
+                  },
+                ),
+              ],
+            ),
             const SizedBox(height: 20),
             
             // Cartes de statistiques rapides

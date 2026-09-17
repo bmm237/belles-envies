@@ -36,10 +36,8 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await AuthService.instance.login(email, password);
       if (!mounted) return;
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const MainShell(initialIndex: 3)),
-        (route) => false,
-      );
+      // On retire simplement les écrans par dessus pour laisser le Wrapper agir
+      Navigator.of(context).popUntil((route) => route.isFirst);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Connexion réussie, bon appétit !')),
       );

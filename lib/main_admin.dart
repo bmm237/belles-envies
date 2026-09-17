@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'widgets/auth_wrapper.dart';
+import 'screens/admin/admin_dashboard.dart';
 import 'theme/app_theme.dart';
 
+/// Point d'entrée spécial pour le Dashboard Admin (idéal pour le Web)
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -11,19 +12,19 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(const RestaurantApp());
+  runApp(const AdminApp());
 }
 
-class RestaurantApp extends StatelessWidget {
-  const RestaurantApp({super.key});
+class AdminApp extends StatelessWidget {
+  const AdminApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Belle Envie',
+      title: 'Belle Envie - Administration',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
-      home: const AuthWrapper(),
+      home: const AdminDashboard(),
     );
   }
 }

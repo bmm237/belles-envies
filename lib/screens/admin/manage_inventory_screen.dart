@@ -12,6 +12,10 @@ class ManageInventoryScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.black,
         title: const Text('Gestion des stocks', style: TextStyle(color: AppColors.gold)),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.gold),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.add, color: AppColors.gold),
